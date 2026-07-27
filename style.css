@@ -106,10 +106,16 @@ html, body {
   padding-bottom: 1.6rem;
 }
 
-/* ---------- Start button ---------- */
+/* ---------- Timer buttons ---------- */
 
-.start-btn {
+.timer-buttons {
+  display: flex;
+  gap: 0.6rem;
   margin-top: 0.6rem;
+}
+
+.start-btn,
+.pause-btn {
   padding: 0.5rem 1.75rem;
 
   background-color: #DDA83B;
@@ -124,13 +130,28 @@ html, body {
   -webkit-app-region: no-drag;
 }
 
-.start-btn:hover {
+.start-btn:hover,
+.pause-btn:hover {
   background-color: #C9962F;
 }
 
-.start-btn:disabled {
-  opacity: 0.5;
-  cursor: default;
+.stop-btn {
+  padding: 0.5rem 1.75rem;
+
+  background-color: #FFFFFF;
+  border: 3px solid #DDA83B;
+  border-radius: 999px;
+
+  font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #A87A2A;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.stop-btn:hover {
+  background-color: #FCF0CB;
 }
 
 /* ---------- Candle image ---------- */

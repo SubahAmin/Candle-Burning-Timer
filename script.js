@@ -20,6 +20,8 @@ let currentFrame = 0;
 let flickerTimeout = null;
 let isExtinguished = false;
 
+// flicker runs continuously whenever the candle is "lit" —
+// during running AND paused, only stopped when extinguished or reset
 function flickerCandle() {
   if (isExtinguished) return;
 
@@ -30,13 +32,25 @@ function flickerCandle() {
   flickerTimeout = setTimeout(flickerCandle, nextDelay);
 }
 
-function extinguishCandle() {
-  isExtinguished = true;
+function stopFlicker() {
   if (flickerTimeout) {
     clearTimeout(flickerTimeout);
     flickerTimeout = null;
   }
+}
+
+function extinguishCandle() {
+  isExtinguished = true;
+  stopFlicker();
   candleImg.src = FINAL_FRAME;
+}
+
+function resetCandleToFull() {
+  isExtinguished = false;
+  stopFlicker();
+  currentStage = 0;
+  currentFrame = 0;
+  candleImg.src = candleStages[0][0];
 }
 
 function updateCandleStage() {
@@ -55,7 +69,6 @@ function updateCandleStage() {
 // ---------- Segmented digit picker ----------
 
 let digits = [0, 2, 0, 9];
-let isRunning = false;
 
 const digitEls = [
   document.getElementById("digit0"),
@@ -67,9 +80,11 @@ const digitEls = [
 const upButtons = document.querySelectorAll(".digit-arrow.up");
 const downButtons = document.querySelectorAll(".digit-arrow.down");
 const startBtn = document.getElementById("startBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const stopBtn = document.getElementById("stopBtn");
 
 function maxForIndex(index) {
-  if (index === 2) return 5;
+  if (index === 2) return 5; // seconds tens digit: 0-5 only
   return 9;
 }
 
@@ -80,7 +95,7 @@ function renderDigits() {
 }
 
 function changeDigit(index, delta) {
-  if (isRunning) return;
+  if (timerState !== "idle") return;
 
   const max = maxForIndex(index);
   let value = digits[index] + delta;
@@ -117,6 +132,12 @@ let countdownInterval = null;
 let remainingSeconds = 0;
 let totalSeconds = 0;
 
+// "idle"    -> digits editable, Start visible, Pause/Stop hidden
+// "running" -> countdown + melt active, Pause visible, Start/Stop hidden
+// "paused"  -> countdown + melt frozen, candle keeps flickering at current height,
+//              Start hidden, Pause becomes hidden, Stop + a "Resume"-labeled button shown
+let timerState = "idle";
+
 function digitsToSeconds() {
   const mins = digits[0] * 10 + digits[1];
   const secs = digits[2] * 10 + digits[3];
@@ -140,34 +161,33 @@ function stopCountdown() {
   }
 }
 
-function startCountdown() {
-  stopCountdown();
-  if (remainingSeconds <= 0) return;
+function tick() {
+  remainingSeconds--;
+  secondsToDigits(Math.max(remainingSeconds, 0));
+  updateCandleStage();
 
-  countdownInterval = setInterval(() => {
-    remainingSeconds--;
-    secondsToDigits(Math.max(remainingSeconds, 0));
-    updateCandleStage();
-
-    if (remainingSeconds <= 0) {
-      stopCountdown();
-      extinguishCandle();
-      isRunning = false;
-      setEditingEnabled(true);
-      startBtn.textContent = "Start";
-    }
-  }, 1000);
+  if (remainingSeconds <= 0) {
+    stopCountdown();
+    extinguishCandle();
+    goIdle();
+  }
 }
 
-startBtn.addEventListener("click", () => {
-  if (isRunning) {
-    stopCountdown();
-    isRunning = false;
-    setEditingEnabled(true);
-    startBtn.textContent = "Start";
-    return;
-  }
+function startCountdown() {
+  stopCountdown();
+  countdownInterval = setInterval(tick, 1000);
+}
 
+function goIdle() {
+  timerState = "idle";
+  setEditingEnabled(true);
+  startBtn.style.display = "inline-block";
+  startBtn.textContent = "Start";
+  pauseBtn.style.display = "none";
+  stopBtn.style.display = "none";
+}
+
+function beginNewTimer() {
   const seconds = digitsToSeconds();
   if (seconds <= 0) return;
 
@@ -176,17 +196,66 @@ startBtn.addEventListener("click", () => {
 
   currentStage = 0;
   isExtinguished = false;
-  if (flickerTimeout) {
-    clearTimeout(flickerTimeout);
-    flickerTimeout = null;
-  }
+  stopFlicker();
   flickerCandle();
 
-  isRunning = true;
+  timerState = "running";
   setEditingEnabled(false);
-  startBtn.textContent = "Stop";
+  startBtn.style.display = "none";
+  pauseBtn.style.display = "inline-block";
+  pauseBtn.textContent = "Pause";
+  stopBtn.style.display = "inline-block";
 
   startCountdown();
+}
+
+function pauseTimer() {
+  stopCountdown();
+  // flicker keeps running (do NOT call stopFlicker here) so the flame
+  // still flickers between frame 1 and 2 while paused; currentStage stays
+  // exactly where it was, so height is frozen
+  timerState = "paused";
+  pauseBtn.textContent = "Resume";
+}
+
+function resumeTimer() {
+  if (isExtinguished) return;
+
+  timerState = "running";
+  pauseBtn.textContent = "Pause";
+
+  startCountdown(); // continues counting down + melting from remainingSeconds/currentStage
+}
+
+function stopTimer() {
+  stopCountdown();
+  resetCandleToFull();
+
+  remainingSeconds = 0;
+  totalSeconds = 0;
+  secondsToDigits(0); // resets digit boxes to 00:00
+
+  goIdle();
+}
+
+startBtn.addEventListener("click", () => {
+  if (timerState === "idle") {
+    beginNewTimer();
+  }
+});
+
+pauseBtn.addEventListener("click", () => {
+  if (timerState === "running") {
+    pauseTimer();
+  } else if (timerState === "paused") {
+    resumeTimer();
+  }
+});
+
+stopBtn.addEventListener("click", () => {
+  if (timerState === "running" || timerState === "paused") {
+    stopTimer();
+  }
 });
 
 renderDigits();

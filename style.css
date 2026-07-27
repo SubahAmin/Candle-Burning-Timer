@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-app-region: drag;
+  background: transparent;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 300px;
+  height: 600px;
+  padding: 1.5rem 1.5rem 0;
+  overflow: hidden;
+
+  background-image: url("assets/Rectangle 1.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Title text ---------- */
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 2.6rem;
+  line-height: 1.15;
+  color: #DDA83B;
+  -webkit-text-stroke: 2px #A87A2A;
+  text-align: center;
+}
+
+/* ---------- Segmented timer ---------- */
+
+.timer-segments {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  -webkit-app-region: no-drag;
+}
+
+.digit-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 56px;
+}
+
+.digit-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 56px;
+  height: 64px;
+
+  background-color: #FFFFFF;
+  border: 4px solid #DDA83B;
+  border-radius: 12px;
+
+  font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #A87A2A;
+}
+
+.digit-arrow {
+  background: none;
+  border: none;
+  color: #DDA83B;
+  font-size: 0.9rem;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.digit-arrow:hover {
+  color: #A87A2A;
+}
+
+.digit-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.colon {
+  font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: #A87A2A;
+  padding-bottom: 1.6rem;
+}
+
+/* ---------- Start button ---------- */
+
+.start-btn {
+  margin-top: 0.6rem;
+  padding: 0.5rem 1.75rem;
+
+  background-color: #DDA83B;
+  border: none;
+  border-radius: 999px;
+
+  font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #FFF8E7;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.start-btn:hover {
+  background-color: #C9962F;
+}
+
+.start-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---------- Candle image ---------- */
+
+.candle-wrap {
+  width: 140px;
+  height: 220px;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  -webkit-app-region: no-drag;
+  margin-top: auto;
+}
+
+.candle {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+button,
+input,
+textarea,
+select {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>app name</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="app">
+      <div class="title">
+        <span>Set</span>
+        <span>Your</span>
+        <span>Timer!</span>
+      </div>
+
+      <div class="timer-segments">
+        <div class="digit-box" data-index="0">
+          <button class="digit-arrow up" data-index="0">▲</button>
+          <span class="digit-value" id="digit0">0</span>
+          <button class="digit-arrow down" data-index="0">▼</button>
+        </div>
+        <div class="digit-box" data-index="1">
+          <button class="digit-arrow up" data-index="1">▲</button>
+          <span class="digit-value" id="digit1">2</span>
+          <button class="digit-arrow down" data-index="1">▼</button>
+        </div>
+
+        <span class="colon">:</span>
+
+        <div class="digit-box" data-index="2">
+          <button class="digit-arrow up" data-index="2">▲</button>
+          <span class="digit-value" id="digit2">0</span>
+          <button class="digit-arrow down" data-index="2">▼</button>
+        </div>
+        <div class="digit-box" data-index="3">
+          <button class="digit-arrow up" data-index="3">▲</button>
+          <span class="digit-value" id="digit3">9</span>
+          <button class="digit-arrow down" data-index="3">▼</button>
+        </div>
+      </div>
+
+      <button id="startBtn" class="start-btn">Start</button>
+
+      <div class="candle-wrap">
+        <img id="candleImg" class="candle" src="assets/Untitled-1_0000_1-2.png" alt="candle" />
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
